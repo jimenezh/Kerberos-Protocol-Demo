@@ -1,5 +1,5 @@
 from datetime import datetime
-from encryption import decrypt, encrypt, create_nonce
+from encryption import decrypt, encrypt, create_random_16_bytes
 class HTTP_Server:
     def __init__(self, name, secret_key,nonce):
         self.name = name
@@ -22,7 +22,7 @@ class HTTP_Server:
             # add to past authenticators
             if(self.verify_ticket(client_authenticator, http_ticket)  ):
                 self.create_authenticator()
-                nonce = create_nonce()
+                nonce = create_random_16_bytes()
                 enc_auth = encrypt(self.current_authenticator, self.session_key, nonce)
                 return [enc_auth, nonce]
 

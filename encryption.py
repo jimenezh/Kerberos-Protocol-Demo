@@ -62,7 +62,7 @@ def decrypt(ctext, key, iv):
     return plain
 
 
-def create_nonce():
+def create_random_16_bytes():
     return urandom(16)
 
 

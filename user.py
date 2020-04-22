@@ -1,5 +1,5 @@
 from datetime import datetime
-from encryption import encrypt, decrypt, create_nonce
+from encryption import encrypt, decrypt, create_random_16_bytes
 
 class User:
     
@@ -23,7 +23,6 @@ class User:
             
     def process_tgt(self, auth_return):
         """Documents the message returned by the auth server"""
-
         self.tgt = auth_return[0]
         self.tgs_session_key = decrypt(auth_return[1], self.password, auth_return[2])
      
@@ -35,7 +34,7 @@ class User:
         """
         self.service_request = http_service_type
         self.create_authenticator()
-        self.nonce = create_nonce()
+        self.nonce = create_random_16_bytes()
         return [http_service_type, self.tgt, encrypt(self.current_authenticator,self.tgs_session_key, self.nonce), self.nonce]
     def process_HTTP_ticket(self, http_return):
         """Documents the message returned by the TGT"""
@@ -50,7 +49,7 @@ class User:
             returned by the TGT. Encrypted with HTTP session key
         """
         self.create_authenticator()
-        self.nonce = create_nonce()
+        self.nonce = create_random_16_bytes()
         enc_auth = encrypt(self.current_authenticator, self.http_session_key, self.nonce)
 
         return [ enc_auth, self.http_ticket, self.nonce]

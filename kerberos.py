@@ -1,5 +1,5 @@
 from datetime import datetime
-from encryption import encrypt, decrypt, create_nonce
+from encryption import encrypt, decrypt, create_random_16_bytes
 from KDC import KDC
 
 class Auth_Server:
@@ -13,10 +13,10 @@ class Auth_Server:
 
   
         # client ID, client IP, ticket lifetime, time, TGS session key
-        self.database.tgs_session_key = create_nonce()
+        self.database.tgs_session_key = create_random_16_bytes()
         tgt = [request[0], request[1], request[2], datetime.now(), self.database.tgs_session_key] # CHANGE!!!, encrypt stuff using secret
         
-        self.database.tgt_nonce = create_nonce()
+        self.database.tgt_nonce = create_random_16_bytes()
 
         enc_tgt = encrypt(tgt, self.database.key, self.database.tgt_nonce)
         enc_session_key = encrypt(self.database.tgs_session_key, self.database.users[request[0]], self.database.tgt_nonce)
@@ -43,10 +43,10 @@ class TGS:
             raise Exception("Invalid authenticator")
         # check lifetime validity
 
-        self.database.http_session_key = create_nonce()
+        self.database.http_session_key = create_random_16_bytes()
         http_ticket = [http_service, tgt[0], tgt[1], datetime.now(), tgt[2], self.database.http_session_key]
 
-        self.database.http_nonce = create_nonce()
+        self.database.http_nonce = create_random_16_bytes()
         enc_ticket = encrypt(http_ticket, self.database.http_key, self.database.http_nonce)
 
         enc_session_key = encrypt(self.database.http_session_key, self.database.tgs_session_key, self.database.http_nonce)
@@ -64,8 +64,8 @@ class Kerberos:
         
         self.auth = Auth_Server(self.database)
         self.TGS = TGS(self.database)
-        self.database.key = create_nonce() #secret server key
-        self.database.http_key = create_nonce()
+        self.database.key = create_random_16_bytes() #secret server key
+        self.database.http_key = create_random_16_bytes()
         
         
     
