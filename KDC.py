@@ -1,6 +1,6 @@
 
 class KDC:
-
+    """ Database shared between Kerberos servers"""
     def __init__(self):
         self.users = {}
         self.tgt_nonce = None
