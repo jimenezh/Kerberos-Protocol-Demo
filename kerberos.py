@@ -3,9 +3,17 @@ from encryption import encrypt, decrypt, create_random_16_bytes
 from KDC import KDC
 
 class Auth_Server:
+
     def __init__(self, database):
+        """
+            Connects to database
+        """
         self.database = database
     def process_request(self, request):
+        """
+            Processes authentication request.
+            If the request is valid, returns encrypted TGT and TGT session key
+        """
         # check if a user is valid
         if request[0] not in self.database.users:
             raise KeyError("Invalid User")
@@ -13,7 +21,7 @@ class Auth_Server:
 
         # client ID, client IP, ticket lifetime, time, TGS session key
         self.database.tgs_session_key = create_random_16_bytes()
-        tgt = [request[0], request[1], request[2], datetime.now(), self.database.tgs_session_key] # CHANGE!!!, encrypt stuff using secret
+        tgt = [request[0], request[1], request[2], datetime.now(), self.database.tgs_session_key]
         
         self.database.tgt_nonce = create_random_16_bytes()
 
@@ -24,7 +32,11 @@ class Auth_Server:
    
 
 class TGS:
+
     def __init__(self, database):
+        """
+            Connects to database
+        """
         self.database = database
     
     def process_request(self, request):
@@ -56,28 +68,28 @@ class TGS:
         return [enc_ticket, enc_session_key, self.database.http_nonce]
 
 
-
-
 class Kerberos:
-    # global users
-    # users = {}
 
     def __init__(self):
+        """
+            Creates the database and the two components of the trusted server, along with their secret key
+        """
         self.database = KDC()
-        
         self.auth = Auth_Server(self.database)
         self.TGS = TGS(self.database)
         self.database.key = create_random_16_bytes() #secret server key
         self.database.http_key = create_random_16_bytes()
         
-        
-    
-
     def kinit(self, ID, password):
+        """
+            User registration
+        """
         self.database.users[ID] = password
 
-
     def process_request(self, request):
+        """
+            Directs the request to the corresponding server
+        """
         # auth request
         if len(request) == 3:
             return self.auth.process_request(request)
@@ -86,5 +98,3 @@ class Kerberos:
         if len(request) == 4:
        
             return self.TGS.process_request(request)
-
-
