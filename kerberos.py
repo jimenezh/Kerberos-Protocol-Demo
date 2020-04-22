@@ -9,11 +9,6 @@ class Auth_Server:
         # check if a user is valid
         if request[0] not in self.database.users:
             raise KeyError("Invalid User")
-        # check lifetime validity
-        # t1 = datetime.fromisoformat(request[2])
-        # t2 = datetime.now()
-        # if (t2 - t1).total_seconds() > 60:
-        #     raise Exception("Ticket has expired")
         
 
         # client ID, client IP, ticket lifetime, time, TGS session key
@@ -46,10 +41,10 @@ class TGS:
         if authenticator[0] != tgt[0]:
             raise Exception("Invalid authenticator")
         # check lifetime validity
-        # t1 = datetime.fromisoformat(tgt[3])
-        # t2 = datetime.fromisoformat(authenticator[1])
-        # if (t2 - t1).total_seconds() > 30*5:
-        #     raise Exception("Ticket has expired")
+        t1 = datetime.fromisoformat(tgt[3].decode())
+        t2 = datetime.fromisoformat(authenticator[1].decode())
+        if (t2 - t1).total_seconds() > 30*5:
+            raise Exception("Ticket has expired")
 
         self.database.http_session_key = create_random_16_bytes()
         http_ticket = [http_service, tgt[0], tgt[1], datetime.now(), tgt[2], self.database.http_session_key]

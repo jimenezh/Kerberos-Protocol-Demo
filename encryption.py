@@ -2,6 +2,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from Cryptodome.Cipher import AES
 from os import urandom
+from binascii import hexlify
 
 
 def to_bytes(elem):
@@ -66,9 +67,22 @@ def create_random_16_bytes():
     return urandom(16)
 
 
-# key = b'\x00'*16
-# data = ['hello', 'goddbye', 34]
-# c = encrypt(data, key, key)
-# p = decrypt(c, key, key)
-# print(c)
-# print(p)
+def print_hex(l):
+    if type(l) != list:
+        if(type(l) != bytes):
+            l = l.encode()
+        return hexlify(l).decode()
+ 
+    ret = [0]*len(l)
+    for i in range(len(l)):
+        temp =l[i]
+        if(type(temp) == list):
+            ret[i] = print_hex(temp)
+        elif(type(temp) != bytes):
+            temp = temp.encode()
+            ret[i] = hexlify(temp).decode()
+        else:
+            ret[i] = hexlify(temp).decode()
+    return ret
+
+

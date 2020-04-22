@@ -2,6 +2,7 @@ from user import User
 from kerberos import Kerberos
 from http import HTTP_Server
 import time
+from encryption import print_hex
 
 ticket_lifetime = 5*60
 
@@ -38,29 +39,29 @@ time.sleep(3)
 
 # TGT
 print("\n\nYou have received the an encrypted TGT and an encrypted TGS session key")
-print("Here is your encrypted TGT: ", user.tgt)
+print("Here is your encrypted TGT: ", print_hex(user.tgt))
 print("\nUnencrypting TGS session key...")
 time.sleep(1)
-print("Here is your TGS sesison key", user.tgs_session_key)
+print("Here is your TGS sesssion key: ", print_hex(user.tgs_session_key))
 time.sleep(3)
 
-# TGS Server
+# TGT Server
 print('\n\nGenerating', service,' Ticket...')
 time.sleep(1)
 http_request = user.get_HTTP_request(service, ticket_lifetime)
-print("Sending", http_request,"encrpted with", user.tgs_session_key, "key to TGT Server..." )
+print("Sending",print_hex( http_request),"encrpted with", print_hex(user.tgs_session_key), "key to TGT Server..." )
 time.sleep(1)
-print("Request has been received by TGT server. Processing...")
+print("\nRequest has been received by TGT server. Processing...")
 response = server.process_request(http_request)
 time.sleep(2)
-print("TGT server is sending back the following response", response)
+print("TGT server is sending back the following response", print_hex(response))
 print("\nProcessing the response...")
 time.sleep(2)
 user.process_HTTP_ticket(response)
-print('Your (encrypted) HTTP Ticket is:', user.http_ticket)
+print('Your (encrypted) HTTP Ticket is:', print_hex(user.http_ticket))
 print("Decrypting the HTTP Session Key...")
 time.sleep(1)
-print("Your HTTP Session Key is:", user.http_session_key)
+print("Your HTTP Session Key is:", print_hex(user.http_session_key))
 time.sleep(3)
 
 
@@ -71,13 +72,13 @@ http = HTTP_Server(service, server.database.http_key, server.database.http_nonce
 message = user.contact_HTTP_server()
 print("Sending the request for", service, 'with unique ID', hash(service))
 time.sleep(2)
-print( "The HTTP server has received the following request from %s:".format(username) , message)
+print( "\nThe HTTP server has received the following request from {}:".format(username) ,print_hex( message))
 response = http.process_client_request(message)
 print("HTTP server has verified your identity")
 time.sleep(1)
 print("HTTP server has responded with proof of its identity")
 time.sleep(2)
-print("Verifying identity of server...")
+print("\nVerifying identity of server...")
 time.sleep(3)
 
 if user.process_HTTP_server_contact(response):
