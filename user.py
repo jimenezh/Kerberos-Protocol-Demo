@@ -62,8 +62,10 @@ class User:
         # Checking authenticator
         req_type = self.http_auth[0]
         timestamp = datetime.fromisoformat(self.http_auth[1].decode())
-        if req_type != hash(self.service_request or (timestamp - self.current_authenticator[1]).total_seconds() > 60:
+        if req_type != hash(self.service_request):
             raise Exception("Invalid Authenticator")
+        if (timestamp - self.current_authenticator[1]).total_seconds() > 60 :
+            raise Exception("Ticket has expired")
         return True
 
     def set_service_ID(self, ID):
