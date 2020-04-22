@@ -15,6 +15,7 @@ class User:
         self.service_request = None
         self.current_authenticator = None
         self.nonce = None
+        self.service_ID = None
 
     # to auth server
     def get_init_request(self, lifetime):
@@ -58,12 +59,15 @@ class User:
         self.nonce = http_return[-1]
         self.http_auth= decrypt(http_return[0], self.http_session_key, self.nonce)
         
+        # Checking authenticator
         req_type = self.http_auth[0]
         timestamp = datetime.fromisoformat(self.http_auth[1].decode())
-    
-        if req_type == hash(self.service_request):
-            return (timestamp - self.current_authenticator[1]).total_seconds() <= 60
-        return False
+        if req_type != hash(self.service_request or (timestamp - self.current_authenticator[1]).total_seconds() > 60:
+            raise Exception("Invalid Authenticator")
+        return True
+
+    def set_service_ID(self, ID):
+        self.service_ID = ID
 
     def create_authenticator(self):
         self.current_authenticator = [self.ID,   datetime.now()]
