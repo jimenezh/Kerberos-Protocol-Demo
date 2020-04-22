@@ -1,8 +1,29 @@
 # Kerberos Protocol Demo
 
-main 
-user
-kerberos server
-http
+This repo features files written in Python3 that are used to simulate the Kerberos protocol.
 
-https://www.vanimpe.eu/2017/05/26/kerberos-made-easy/
+## Project Setup
+
+Clone the repo and run main.py. You can view all the files involved using your favorite text editor.
+
+```
+git clone https://github.com/jimenezh/Kerberos-Protocol-Demo.git
+cd Kerberos-Protocol-Demo
+python3 main.py
+```
+
+## File Description
+
+* main.py
+  * Main file that emulates the protocal.
+* user.py
+  * Models the user and its functions used in the Kerberos protocal.
+* kerberos.py
+  * Models the trusted server and its functions used in the Kerberos protocal.
+* http.py
+  * Models the HTTP service and its functions used in the Kerberos protocal.
+* encryption.py
+  * Helper file that assists with encryption and decryption.
+* KDC.py
+  * Models the Key Distribution Center that the trusted server uses in the Kerberos protocal.
+
