@@ -15,7 +15,7 @@ python3 main.py
 ## File Description
 
 * main.py
-  * Main file that emulates the protocal.
+  * Main file that simulates the Kerberos protocal.
 * user.py
   * Models the user and its functions used in the Kerberos protocal.
 * kerberos.py
