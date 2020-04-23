@@ -3,6 +3,7 @@ from kerberos import Kerberos
 from http import HTTP_Server
 import time
 from encryption import print_hex
+import hashlib
 
 ticket_lifetime = 5*60
 
@@ -10,8 +11,8 @@ ticket_lifetime = 5*60
 server = Kerberos()
 username = input("Welcome to the magical Kerberos simulation! \nThis is your first time using this service, so please provide us with your username: ")
 password = ''
-while(len(password) != 16):
-    password = input("What would you like your password to be?\nIt must be 16 characters long: ")
+password = input("What would you like your password to be?")
+password = hashlib.md5(password.encode()).digest()
 
 user = User(username, "1.1.1.1", password)
 server.kinit(user.ID, user.password)

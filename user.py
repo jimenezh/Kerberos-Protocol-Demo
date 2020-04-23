@@ -6,7 +6,7 @@ class User:
     def __init__(self, ID, IP, password):
         self.ID = ID
         self.IP = IP
-        self.password = password.encode()
+        self.password = password
         self.secret = hash(password)
         self.tgs_session_key = None
         self.tgt = None
