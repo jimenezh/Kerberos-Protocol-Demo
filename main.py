@@ -11,7 +11,7 @@ ticket_lifetime = 5*60
 server = Kerberos()
 username = input("Welcome to the magical Kerberos simulation! \nThis is your first time using this service, so please provide us with your username: ")
 password = ''
-password = input("What would you like your password to be?")
+password = input("What would you like your password to be? ")
 password = hashlib.md5(password.encode()).digest()
 
 user = User(username, "1.1.1.1", password)
