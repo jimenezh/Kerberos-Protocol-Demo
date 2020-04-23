@@ -6,6 +6,8 @@ This repo features files written in Python3 that are used to simulate the Kerber
 
 Clone the repo and run main.py. You can view all the files involved using your favorite text editor.
 
+Only Python 3.7 and above is supported due to the nature of the datetime module used.
+
 ```
 git clone https://github.com/jimenezh/Kerberos-Protocol-Demo.git
 cd Kerberos-Protocol-Demo
